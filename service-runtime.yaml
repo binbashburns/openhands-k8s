@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: openhands-runtime-service
+  namespace: openhands
+spec:
+  selector:
+    app: openhands-runtime
+  ports:
+    - protocol: TCP
+      port: 51963
+      targetPort: 51963
+  type: ClusterIP

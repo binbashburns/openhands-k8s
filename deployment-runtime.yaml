@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openhands-runtime
+  namespace: openhands
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openhands-runtime
+  template:
+    metadata:
+      labels:
+        app: openhands-runtime
+    spec:
+      containers:
+      - name: openhands-runtime
+        image: ghcr.io/all-hands-ai/runtime:0.9-nikolaik
+        ports:
+        - containerPort: 51963
+        command: ["/usr/sbin/sshd", "-D", "-p", "51963", "-o", "PermitRootLogin=yes"]

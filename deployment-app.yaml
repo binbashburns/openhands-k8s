@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openhands-app
+  namespace: openhands
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openhands-app
+  template:
+    metadata:
+      labels:
+        app: openhands-app
+    spec:
+      containers:
+      - name: openhands-app
+        image: ghcr.io/all-hands-ai/openhands:0.9
+        env:
+        - name: SANDBOX_USER_ID
+          value: "42420"
+        - name: WORKSPACE_BASE
+          value: "/opt/workspace_base"
+        - name: RUN_AS_OPENHANDS
+          value: "true"
+        - name: SANDBOX_API_HOSTNAME
+          value: "host.docker.internal"
+        - name: USE_HOST_NETWORK
+          value: "false"
+        volumeMounts:
+        - name: workspace-volume
+          mountPath: /opt/workspace_base
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        ports:
+        - containerPort: 3000
+      volumes:
+      - name: workspace-volume
+        persistentVolumeClaim:
+          claimName: workspace-pvc
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
